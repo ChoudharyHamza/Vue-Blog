@@ -3,7 +3,7 @@
   <div>
     <h1 v-if = "posts.length===0"  class="center"> Loading... </h1>
     <h1 v-else-if="errorr"> An error ocurred please refresh </h1> 
-    <give-post v-else v-for="post in arrToRender" :key="post.id" :title="post.title" :body="post.body" :postId="post.id">  </give-post>
+    <render-post v-else v-for="post in arrToRender" :key="post.id" :title="post.title" :body="post.body" :postId="post.id">  </render-post>
   </div>
   
   <post-pagination :activePage="activePage" :posts="posts.length" :paginationAlgo="paginationAlgo" >  </post-pagination>
