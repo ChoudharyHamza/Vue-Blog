@@ -1,7 +1,7 @@
 <template>
     <div class="container" >
-    <div id="main-heading" >
-      <h1 > {{title}} </h1>
+    <div class="main-heading" >
+      <h1 >{{postId}}-  {{title}} </h1>
     </div>
     <div>
       <p> {{body}} </p>
@@ -11,7 +11,7 @@
 
 <script>
 export default {
-    props:["title", "body"]
+    props:["title", "body","postId"]
 }
 </script>
 
@@ -22,7 +22,7 @@ export default {
   margin-right:5%;
   margin-top:50px;
 }
-#main-heading{
+.main-heading{
   font-size:15px;
 }
 </style>>
