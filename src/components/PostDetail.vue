@@ -1,6 +1,6 @@
 <template>
 <div>
-    <router-Link to="{ name: '/', params: {activePage} }" ><button>Go back</button></router-link>
+    <router-Link :to="{ name: 'RenderBlogWithPage', params: {activePage} }" ><button>Go back</button></router-link>
     
     <div v-if = "checkIds">
     <h1> {{currentPost.id}}-  {{ currentPost.title }} </h1>
@@ -15,11 +15,7 @@
 import axios from "axios"
 export default {
     name: "PostDetail",
-    props: {
-        postId:{
-            default: 1,
-        }
-    },
+    props: ["postId","activePage"],
     data(){
         return {
             currentPost:{},
