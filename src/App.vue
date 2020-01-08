@@ -6,7 +6,7 @@
     <render-post v-else v-for="post in arrToRender" :key="post.id" :title="post.title" :body="post.body" :postId="post.id">  </render-post>
   </div>
   
-  <post-pagination :activePage="activePage" :posts="posts.length" :paginationAlgo="paginationAlgo" >  </post-pagination>
+  <post-pagination :activePage="activePage" :count="posts.length" :paginationAlgo="paginationAlgo" >  </post-pagination>
 </div>
 </template>
 

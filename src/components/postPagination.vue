@@ -8,7 +8,7 @@
 <script>
 /*eslint-disable*/
 export default {
-    props:["posts","paginationAlgo", "activePage"],
+    props:["count","paginationAlgo", "activePage"],
 
     data(){
         return{
@@ -18,7 +18,7 @@ export default {
 
     methods:{
         buttonsRen: function(){ 
-            this.buttons = Math.ceil(this.posts/5);
+            this.buttons = Math.ceil(this.count/5);
         },
         currentPage(button){
             if(this.activePage===button){
