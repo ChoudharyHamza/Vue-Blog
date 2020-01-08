@@ -1,14 +1,18 @@
 <template>
-    <div class="btn-con">
+    <div class= "btn-con">
         {{this.buttonsRen()}}
-    <button class="btn" v-for="button in buttons" @click="paginationAlgo(button)" :class="currentPage(button)" :key="button">{{ button }}</button>
-        </div>
+        <button class= "btn" v-for= "button in buttons"  :key= "button">
+            <router-link :to= "{name: 'RenderBlogWithPage', params: {activePage: button} }">
+                {{ button }}
+            </router-link>
+        </button>
+    </div>
 </template>
 
 <script>
 /*eslint-disable*/
 export default {
-    props:["count","paginationAlgo", "activePage"],
+    props: ["count"],
 
     data(){
         return{
@@ -18,13 +22,8 @@ export default {
 
     methods:{
         buttonsRen: function(){ 
-            this.buttons = Math.ceil(this.count/5);
+            this.buttons= Math.ceil(this.count/5);
         },
-        currentPage(button){
-            if(this.activePage===button){
-                return "active"
-            }
-        }
     },
 }
 /*eslint-disable*/
@@ -33,7 +32,7 @@ export default {
 <style>
 .btn{
     font-size: 30px;
-    width:55px;
+    width: 55px;
 }
 .active{
     background-color: rgb(50, 138, 211)
