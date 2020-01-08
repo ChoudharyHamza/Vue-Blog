@@ -1,7 +1,7 @@
 <template>
     <div class="container" >
     <div class="main-heading" >
-      <h1 >{{postId}}-  {{title}} </h1>
+      <router-link :to="{ name: 'PostDetail', params: { postId } }" > <h1>{{postId}}-  {{title}} </h1> </router-link>
     </div>
     <div>
       <p> {{body}} </p>
@@ -25,4 +25,4 @@ export default {
 .main-heading{
   font-size:15px;
 }
-</style>>
+</style>

@@ -32,7 +32,6 @@ export default {
 
 <style>
 .btn{
-
     font-size: 30px;
     width:55px;
 }
