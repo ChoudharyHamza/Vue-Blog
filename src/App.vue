@@ -1,28 +1,63 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+<div>
+  <div>
+    <h1 v-if = "posts.length===0"  class="center"> Loading... </h1>
+    <h1 v-else-if="errorr"> An error ocurred please refresh </h1> 
+    <render-post v-else v-for="post in arrToRender" :key="post.id" :title="post.title" :body="post.body" :postId="post.id">  </render-post>
   </div>
+  
+  <post-pagination :activePage="activePage" :count="posts.length" :paginationAlgo="paginationAlgo" >  </post-pagination>
+</div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+/* eslint-disable */
+import axios from "axios"
+import RenderPost from "./components/RenderPost"
+import postPagination from "./components/postPagination"
 
 export default {
-  name: 'app',
-  components: {
-    HelloWorld
-  }
+  components:{
+    RenderPost,
+    postPagination
+  },
+  
+  created:function(){
+    axios.get("https:/jsonplaceholder.typicode.com/posts")
+      .then(response => {this.respons(response);this.paginationAlgo(this.activePage);})
+      .catch(error => { this.errorr = true;  });
+  },
+
+  data(){
+    return {
+      posts : [],
+      errorr:false,
+      returnedEmpty:false,
+      arrToRender:[],
+      activePage:1
+    }
+  },
+
+  methods:{
+    respons(response){
+      
+      response.data.length === 0 ? this.error=true: this.error =false;
+      this.posts = response.data;
+    },
+    paginationAlgo(value){
+      let start = (value-1)*5;
+      this.arrToRender = this.posts.slice(start,start+5);
+      this.activePage = value;
+    },
+  },
 }
+/* eslint-disable */
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+.center{
+  margin-left:50%;
+  margin-right:50%
 }
+
 </style>
