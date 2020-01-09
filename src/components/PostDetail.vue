@@ -41,7 +41,7 @@ export default {
         },
     },
     watch:{
-        checkError(){
+        errorOcurred: function(){
         alert("boom!  errorr tis an errorr");
         }
     }
