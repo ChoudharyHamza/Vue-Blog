@@ -1,7 +1,7 @@
 <template>
-    <div class="container" >
-    <div class="main-heading" >
-      <h1 >{{postId}}-  {{title}} </h1>
+    <div class= "container" >
+    <div class= "main-heading" >
+      <router-link :to= "{ name: 'PostDetail', params: { postId, activePage} }" > <h1> {{postId}}-  {{title}} </h1> </router-link>
     </div>
     <div>
       <p> {{body}} </p>
@@ -11,18 +11,18 @@
 
 <script>
 export default {
-    props:["title", "body","postId"]
+    props:["title", "body", "postId", "activePage"]
 }
 </script>
 
 <style >
 .container{
-  width:90%;
+  width: 90%;
   margin-left: 5%;
-  margin-right:5%;
-  margin-top:50px;
+  margin-right: 5%;
+  margin-top: 50px;
 }
 .main-heading{
-  font-size:15px;
+  font-size: 15px;
 }
-</style>>
+</style>
