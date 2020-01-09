@@ -9,8 +9,8 @@ Vue.config.productionTip = false
 Vue.use(VueRounter);
 
 let routes = [
-  { path: "/:activePage", name: "RenderBlogWithPage", component: RenderBlog, props: true },
-  { path: "/", name: "RenderBlog" ,component: RenderBlog,},
+  { path: "/:activePage?", name: "RenderBlogWithPage", component: RenderBlog, props: true},
+  
   { path: "/PostDetail/:activePage/:postId", name: "PostDetail", component: PostDetail, props: true }
 ];
 

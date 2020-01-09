@@ -11,14 +11,15 @@
 </template>
 
 <script>
-/*eslint-disable*/
 import axios from "axios"
+
 export default {
     name: "PostDetail",
     props: ["postId","activePage"],
     data(){
         return {
             currentPost:{},
+            errorOcurred:false
         }
     }, 
     
@@ -30,17 +31,20 @@ export default {
         makeRequest(){
             axios(`https:/jsonplaceholder.typicode.com/posts/${this.postId}`)
             .then(response => {this.currentPost = response.data})    
-            .catch(reject => console.log("errr erroor tehre is ain error"));
+            .catch(() => this.errorOcurred=true);
         }
     },
     
-
     computed: {
         checkIds(){
           return this.postId==this.currentPost.id;
-          console.log(this.postId==this.currentPost.id)
+        },
+    },
+    watch:{
+        checkError(){
+        alert("boom!  errorr tis an errorr");
         }
     }
 }
-/*eslint-disable*/
+
 </script>>

@@ -1,18 +1,19 @@
 <template>
     <div class= "btn-con">
         {{this.buttonsRen()}}
-        <button class= "btn" v-for= "button in buttons"  :key= "button">
-            <router-link :to= "{name: 'RenderBlogWithPage', params: {activePage: button} }">
-                {{ button }}
-            </router-link>
-        </button>
+
+        <router-link :to= "{name: 'RenderBlogWithPage', params: {activePage: button} }" v-for= "button in buttons"  :key= "button">
+            <button class= "btn"  :class={active:blueButton(button)}>
+            {{ button }}
+            </button>
+        </router-link>
     </div>
 </template>
 
 <script>
-/*eslint-disable*/
+
 export default {
-    props: ["count"],
+    props: ["count","currentPage"],
 
     data(){
         return{
@@ -23,7 +24,11 @@ export default {
     methods:{
         buttonsRen: function(){ 
             this.buttons= Math.ceil(this.count/5);
-        },
+        },blueButton(btn){
+            if(this.currentPage == btn){
+                return true
+            }
+        }
     },
 }
 /*eslint-disable*/
