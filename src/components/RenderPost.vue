@@ -1,7 +1,7 @@
 <template>
     <div class= "container" >
     <div class= "main-heading" >
-      <router-link :to= "{ name: 'PostDetail', params: { postId, activePage} }" > <h1> {{postId}}-  {{title}} </h1> </router-link>
+      <router-link :to= "{ name: 'PostDetail', params: { postId, activePage} }" @click.native= "storeSortOrder"> <h1> {{postId}}-  {{title}} </h1> </router-link>
     </div>
     <div>
       <p> {{body}} </p>
@@ -11,7 +11,13 @@
 
 <script>
 export default {
-    props:["title", "body", "postId", "activePage"]
+    props:["title", "body", "postId", "activePage", "sortOrder"],
+
+    methods:{
+      storeSortOrder(){
+        sessionStorage.setItem("sortOrder", String(this.sortOrder));
+      }
+    }
 }
 </script>
 

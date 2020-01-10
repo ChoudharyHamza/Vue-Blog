@@ -1,6 +1,6 @@
 <template>
     <div class="button-div">
-    <button class="btn-sort" @click="onClickSort(1)"> Ascending Order </button>
+    <button class="btn-sort" @click="onClickSort(1)" > Ascending Order </button>
     <button class="btn-sort" @click="onClickSort(-1)"> Descending Order </button>
     <button class="btn-sort" @click="onClickSort(0)" > Reset Order </button>
   </div>
@@ -9,7 +9,6 @@
 <script>
 export default {
   props:["onClickSort"]
-    
 }
 </script>
 

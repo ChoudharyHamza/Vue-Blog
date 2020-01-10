@@ -4,7 +4,7 @@
   <div>
     <h1 v-if = "posts.length===0"  class="center" > Loading... </h1>
     <h1 v-else-if = "errorr" > An error ocurred please refresh </h1> 
-    <render-post v-else v-for = "post in arrToRender" :key="post.id" :title="post.title" :activePage="activePage" :body="post.body" :postId="post.id"> 
+    <render-post v-else v-for = "post in arrToRender" :key="post.id" :title="post.title" :activePage="activePage" :sortOrder="sortOrder" :body="post.body" :postId="post.id"> 
     </render-post>
   </div>
   <post-pagination :count = "posts.length" :currentPage="activePage">  </post-pagination>
@@ -32,15 +32,19 @@ export default {
   mounted: function(){
     axios.get("https:/jsonplaceholder.typicode.com/posts")
       .then(response => {this.storeArray(response);
-        if(this.shouldSort == true)
-        { 
+        if(sessionStorage.length>0)
+        {
+          this.sortOrder = Number(sessionStorage.getItem("sortOrder"));
+        }
+        if(this.sortOrder == 0){
+          this.trueArrayToRender = this.posts;
+          this.paginationAlgo();
+        }else{ 
+          this.shouldSort = true;
           this.sortPosts();
           this.trueArrayToRender = this.sorted
           this.paginationAlgo();
-        }else{
-          this.trueArrayToRender = this.posts;
-          this.paginationAlgo();
-        }
+        } 
       })
       .catch(() => { this.errorr = true;  });
   },
@@ -48,12 +52,12 @@ export default {
   data(){
     return {
       posts : [],
-      errorr:false,
-      trueArrayToRender:[],
-      arrToRender:[],
-      sorted:[],
-      shouldSort:false,
-      sortOrder:0
+      errorr: false,
+      trueArrayToRender: [],
+      arrToRender: [],
+      sorted: [],
+      shouldSort: false,
+      sortOrder: 0
     }
   },
 
@@ -76,7 +80,7 @@ export default {
       }
       if(n == 0) {
         this.sortOrder = n
-        this.shouldSort =false
+        this.shouldSort = false
       }
     },
 
