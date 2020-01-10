@@ -56,14 +56,6 @@ export default {
   data(){
     return {
       posts : [],
-<<<<<<< HEAD
-      errorr: false,
-      trueArrayToRender: [],
-      arrToRender: [],
-      sorted: [],
-      shouldSort: false,
-      sortOrder: 0
-=======
       errorr:false,
       trueArrayToRender:[],
       arrToRender:[],
@@ -72,7 +64,6 @@ export default {
       sortOrder:0,
       search:null,
       searchedArr:[]
->>>>>>> added search
     }
   },
 
