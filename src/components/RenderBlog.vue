@@ -4,7 +4,7 @@
   <div>
     <h1 v-if = "posts.length===0"  class="center" > Loading... </h1>
     <h1 v-else-if = "errorr" > An error ocurred please refresh </h1> 
-    <render-post v-else v-for = "post in arrToRender" :key="post.id" :title="post.title" :activePage="activePage" :sortOrder="sortOrder" :body="post.body" :postId="post.id"> 
+    <render-post v-else v-for = "post in arrToRender" :key="post.id" :title="post.title" :activePage="activePage" :body="post.body" :postId="post.id"> 
     </render-post>
   </div>
   <post-pagination :count = "posts.length" :currentPage="activePage">  </post-pagination>
@@ -77,10 +77,12 @@ export default {
       {
         this.shouldSort = true
         this.sortOrder = n
+        sessionStorage.setItem("sortOrder", String(this.sortOrder));
       }
       if(n == 0) {
         this.sortOrder = n
         this.shouldSort = false
+        sessionStorage.setItem("sortOrder", String(this.sortOrder));
       }
     },
 
