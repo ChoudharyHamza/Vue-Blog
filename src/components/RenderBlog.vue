@@ -1,13 +1,17 @@
 <template>
 <div> 
-  <render-buttons :onClickSort="onClickSort"> </render-buttons>
+  <render-buttons class="elementShouldInline" :onClickSort="onClickSort"> </render-buttons>
+    <div class="elementShouldInline">
+      <label class ="inputlabel" > Search Posts </label>
+      <input class="searchField" type ="text" v-model="searchValue" placeholder="Enter Text To search" />
+    </div>
   <div>
     <h1 v-if = "posts.length===0"  class="center" > Loading... </h1>
     <h1 v-else-if = "errorr" > An error ocurred please refresh </h1> 
-    <render-post v-else v-for = "post in arrToRender" :key="post.id" :title="post.title" :activePage="activePage" :body="post.body" :postId="post.id"> 
+    <render-post v-else v-for = "post in paginatedArray" :key="post.id" :title="post.title" :activePage="activePage" :body="post.body" :postId="post.id"> 
     </render-post>
   </div>
-  <post-pagination :count = "posts.length" :currentPage="activePage">  </post-pagination>
+  <post-pagination :count = "arrayToRender.length" :currentPage="activePage">  </post-pagination>
 </div>
 </template>
 
@@ -37,12 +41,12 @@ export default {
           this.sortOrder = Number(sessionStorage.getItem("sortOrder"));
         }
         if(this.sortOrder == 0){
-          this.trueArrayToRender = this.posts;
+          this.arrayToRender = this.posts;
           this.paginationAlgo();
         }else{ 
           this.shouldSort = true;
           this.sortPosts();
-          this.trueArrayToRender = this.sorted
+          this.arrayToRender = this.sorted
           this.paginationAlgo();
         } 
       })
@@ -52,12 +56,14 @@ export default {
   data(){
     return {
       posts : [],
-      errorr: false,
-      trueArrayToRender: [],
-      arrToRender: [],
-      sorted: [],
-      shouldSort: false,
-      sortOrder: 0
+      errorr:false,
+      arrayToRender:[],
+      paginatedArray:[],
+      sorted:[],
+      shouldSort:false,
+      sortOrder:0,
+      searchValue:null,
+      searchedArr:[]
     }
   },
 
@@ -69,7 +75,7 @@ export default {
 
     paginationAlgo(){
       let start = (this.activePage-1)*5;
-      this.arrToRender = this.trueArrayToRender.slice(start,start+5);
+      this.paginatedArray = this.arrayToRender.slice(start,start+5);
     },
 
     onClickSort(n){
@@ -85,7 +91,6 @@ export default {
         sessionStorage.setItem("sortOrder", String(this.sortOrder));
       }
     },
-
     sortPosts(){
       if(this.shouldSort == true){
         this.sorted = this.posts.slice().sort( (a, b) => { 
@@ -98,8 +103,13 @@ export default {
       }else{console.log("cant sort")}
     }
   },
-
   watch: {
+
+    searchValue:function(){
+      this.searchedArr = this.posts.filter(item => { return item.title.match(this.searchValue) });
+      this.arrayToRender = this.searchedArr
+      this.paginationAlgo();
+    },
     activePage:function(){
      this.paginationAlgo();      
     },
@@ -107,12 +117,12 @@ export default {
     sortOrder:function(){
       if(this.sortOrder != 0){
         this.sortPosts();
-        this.trueArrayToRender = this.sorted;
+        this.arrayToRender = this.sorted;
         this.paginationAlgo();
       }
       if(this.sortOrder == 0)
       {
-        this.trueArrayToRender = this.posts;
+        this.arrayToRender = this.posts;
         this.paginationAlgo();
       }
     }
@@ -122,11 +132,20 @@ export default {
 </script>
 
 <style>
-
+.elementShouldInline{
+  display:inline-block
+}
 .center{
   margin-left: 50%;
   margin-right: 50%
 }
+.searchFieldLabel{
+  margin-left:40px;
+  font-size:20px;
+}
+.searchField{
+  width: 600px;
+  height: 40px;
+  margin-left:10px;
+}
 </style>
-
-

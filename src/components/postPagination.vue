@@ -24,7 +24,9 @@ export default {
     methods:{
         buttonsRen: function(){ 
             this.buttons= Math.ceil(this.count/5);
-        },blueButton(btn){
+        },
+        blueButton(btn){
+           
             if(this.currentPage == btn){
                 return true
             }
