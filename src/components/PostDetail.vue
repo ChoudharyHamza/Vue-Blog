@@ -15,11 +15,11 @@ import axios from "axios"
 
 export default {
     name: "PostDetail",
-    props: ["postId","activePage"],
+    props: ["postId", "activePage"],
     data(){
         return {
-            currentPost:{},
-            errorOcurred:false
+            currentPost: {},
+            errorOcurred: false
         }
     }, 
     
@@ -40,11 +40,11 @@ export default {
           return this.postId==this.currentPost.id;
         },
     },
+
     watch:{
         errorOcurred: function(){
         alert("boom!  errorr tis an errorr");
         }
     }
 }
-
-</script>>
+</script>

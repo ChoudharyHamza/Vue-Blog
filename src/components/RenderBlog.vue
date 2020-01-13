@@ -1,5 +1,6 @@
 <template>
 <div> 
+  <render-buttons :onClickSort="onClickSort"> </render-buttons>
   <div>
     <h1 v-if = "posts.length===0"  class="center" > Loading... </h1>
     <h1 v-else-if = "errorr" > An error ocurred please refresh </h1> 
@@ -11,52 +12,117 @@
 </template>
 
 <script>
+/*eslint-disable*/
 import axios from "axios"
 import RenderPost from "./RenderPost"
 import postPagination from "./postPagination"
+import RenderButtons from "./RenderButtons"
 
 export default {
   components:{
     RenderPost,
-    postPagination
+    postPagination,
+    RenderButtons
   },
+
   props: { activePage: {
       default: 1
   } },
+
   mounted: function(){
     axios.get("https:/jsonplaceholder.typicode.com/posts")
-      .then(response => {this.respons(response);this.paginationAlgo(this.activePage);})
+      .then(response => {this.storeArray(response);
+        if(sessionStorage.length>0)
+        {
+          this.sortOrder = Number(sessionStorage.getItem("sortOrder"));
+        }
+        if(this.sortOrder == 0){
+          this.trueArrayToRender = this.posts;
+          this.paginationAlgo();
+        }else{ 
+          this.shouldSort = true;
+          this.sortPosts();
+          this.trueArrayToRender = this.sorted
+          this.paginationAlgo();
+        } 
+      })
       .catch(() => { this.errorr = true;  });
   },
 
   data(){
     return {
       posts : [],
-      errorr:false,
-      arrToRender:[],
+      errorr: false,
+      trueArrayToRender: [],
+      arrToRender: [],
+      sorted: [],
+      shouldSort: false,
+      sortOrder: 0
     }
   },
 
   methods: {
-    respons(response){
+    storeArray(response){
       response.data.length === 0 ? this.error= true: this.error =false;
       this.posts = response.data;
     },
+
     paginationAlgo(){
       let start = (this.activePage-1)*5;
-      this.arrToRender = this.posts.slice(start,start+5);
+      this.arrToRender = this.trueArrayToRender.slice(start,start+5);
     },
+
+    onClickSort(n){
+      if(n != 0)
+      {
+        this.shouldSort = true
+        this.sortOrder = n
+        sessionStorage.setItem("sortOrder", String(this.sortOrder));
+      }
+      if(n == 0) {
+        this.sortOrder = n
+        this.shouldSort = false
+        sessionStorage.setItem("sortOrder", String(this.sortOrder));
+      }
+    },
+
+    sortPosts(){
+      if(this.shouldSort == true){
+        this.sorted = this.posts.slice().sort( (a, b) => { 
+          a=a.title;
+          b=b.title;
+          if( a>b ) { return 1*this.sortOrder }
+          if( a<b ) { return -1*this.sortOrder }
+          if( a==b ){ return 0*this.sortOrder }
+          });
+      }else{console.log("cant sort")}
+    }
   },
 
   watch: {
     activePage:function(){
-      this.paginationAlgo();
+     this.paginationAlgo();      
+    },
+
+    sortOrder:function(){
+      if(this.sortOrder != 0){
+        this.sortPosts();
+        this.trueArrayToRender = this.sorted;
+        this.paginationAlgo();
+      }
+      if(this.sortOrder == 0)
+      {
+        this.trueArrayToRender = this.posts;
+        this.paginationAlgo();
+      }
     }
   }
 }
+/*eslint-disable*/
 </script>
 
 <style>
+
 .center{
   margin-left: 50%;
   margin-right: 50%

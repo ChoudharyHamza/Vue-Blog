@@ -13,7 +13,7 @@
 <script>
 
 export default {
-    props: ["count","currentPage"],
+    props: ["count", "currentPage"],
 
     data(){
         return{

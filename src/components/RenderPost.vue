@@ -11,7 +11,7 @@
 
 <script>
 export default {
-    props:["title", "body", "postId", "activePage"]
+    props:["title", "body", "postId", "activePage",],
 }
 </script>
 
