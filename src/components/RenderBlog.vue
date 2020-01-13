@@ -1,12 +1,12 @@
 <template>
 <div> 
-  <render-buttons class="elementShouldInline" :onClickSort="onClickSort"> </render-buttons>
-    <div class="elementShouldInline">
-      <label class ="inputlabel" > Search Posts </label>
-      <input class="searchField" type ="text" v-model="searchValue" placeholder="Enter Text To search" />
+  <render-buttons class="element-inline" :onClickSort="onClickSort"> </render-buttons>
+    <div class="element-inline">
+      <label class ="search--label" > Search Posts </label>
+      <input class="search--field" type ="text" v-model="searchValue" placeholder="Enter Text To search" />
     </div>
   <div>
-    <h1 v-if = "posts.length===0"  class="center" > Loading... </h1>
+    <h1 v-if = "posts.length === 0"  class="align-center" > Loading... </h1>
     <h1 v-else-if = "errorr" > An error ocurred please refresh </h1> 
     <render-post v-else v-for = "post in paginatedArray" :key="post.id" :title="post.title" :activePage="activePage" :body="post.body" :postId="post.id"> 
     </render-post>
@@ -104,12 +104,14 @@ export default {
     }
   },
   watch: {
-
     searchValue:function(){
       this.searchedArr = this.posts.filter(item => { return item.title.match(this.searchValue) });
       this.arrayToRender = this.searchedArr
+      if(this.activePage != 1 ){
+      this.$router.push("/1")}
       this.paginationAlgo();
     },
+
     activePage:function(){
      this.paginationAlgo();      
     },
@@ -132,18 +134,18 @@ export default {
 </script>
 
 <style>
-.elementShouldInline{
+.element-inline{
   display:inline-block
 }
-.center{
+.align-center{
   margin-left: 50%;
   margin-right: 50%
 }
-.searchFieldLabel{
+.search--label{
   margin-left:40px;
   font-size:20px;
 }
-.searchField{
+.search--field{
   width: 600px;
   height: 40px;
   margin-left:10px;
