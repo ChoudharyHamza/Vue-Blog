@@ -3,6 +3,7 @@ import App from './App.vue'
 import VueRounter from "vue-router"
 import RenderBlog from "./components/RenderBlog"
 import PostDetail from "./components/PostDetail"
+import store from "./store/"
 
 Vue.config.productionTip = false
 
@@ -19,6 +20,7 @@ let router = new VueRounter({
 });
 
 new Vue({
+  store,
   router,
   render: h => h(App),
 }).$mount('#app')

@@ -6,7 +6,7 @@
       <input class="search--field" type ="text" v-model="searchValue" placeholder="Enter Text To search" />
     </div>
   <div>
-    <h1 v-if = "posts.length === 0"  class="align-center" > Loading... </h1>
+    <h1 v-if = "shouldRender"  class="align-center" > Loading... </h1>
     <h1 v-else-if = "errorr" > An error ocurred please refresh </h1> 
     <render-post v-else v-for = "post in paginatedArray" :key="post.id" :title="post.title" :activePage="activePage" :body="post.body" :postId="post.id"> 
     </render-post>
@@ -16,8 +16,6 @@
 </template>
 
 <script>
-/*eslint-disable*/
-import axios from "axios"
 import RenderPost from "./RenderPost"
 import postPagination from "./postPagination"
 import RenderButtons from "./RenderButtons"
@@ -34,8 +32,9 @@ export default {
   } },
 
   mounted: function(){
-    axios.get("https:/jsonplaceholder.typicode.com/posts")
-      .then(response => {this.storeArray(response);
+    this.$store.dispatch('makeRequestAllPosts')
+      .then(() => {
+        this.posts = this.$store.state.posts
         if(sessionStorage.length>0)
         {
           this.sortOrder = Number(sessionStorage.getItem("sortOrder"));
@@ -50,7 +49,9 @@ export default {
           this.paginationAlgo();
         } 
       })
-      .catch(() => { this.errorr = true;  });
+      .catch(() => { 
+        this.errorr = this.$store.state.mainRequestError;
+      });
   },
 
   data(){
@@ -67,12 +68,13 @@ export default {
     }
   },
 
-  methods: {
-    storeArray(response){
-      response.data.length === 0 ? this.error= true: this.error =false;
-      this.posts = response.data;
-    },
+  computed:{
+    shouldRender(){
+     return this.posts.length == 0 && this.errorr == false
+    }
+  },
 
+  methods: {
     paginationAlgo(){
       let start = (this.activePage-1)*5;
       this.paginatedArray = this.arrayToRender.slice(start,start+5);
@@ -100,7 +102,7 @@ export default {
           if( a<b ) { return -1*this.sortOrder }
           if( a==b ){ return 0*this.sortOrder }
           });
-      }else{console.log("cant sort")}
+      }
     }
   },
   watch: {
@@ -130,7 +132,6 @@ export default {
     }
   }
 }
-/*eslint-disable*/
 </script>
 
 <style>
