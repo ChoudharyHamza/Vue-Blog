@@ -3,15 +3,21 @@ import Vuex from "vuex";
 import axios from "axios";
 
 Vue.use(Vuex);
-
+/*eslint-disable*/
 export default new Vuex.Store({
     state: {
         posts:[],
+        mainRequestError:false,
         currentPost:{},
         currentPostUser:{},
         currentPostComments:[],
-        mainRequestError:false,
-        currentPostRequestError:false
+        currentPostRequestError:false,
+        objWithUrlStrings:{ 
+            mainUrl: "https:/jsonplaceholder.typicode.com/",
+            postsUrl: "posts/",
+            userUrl: "users/",
+            commentsUrl:"comments?postId="
+        }
     },
     getters: {},
     mutations: {
@@ -43,46 +49,44 @@ export default new Vuex.Store({
         }
     },
     actions: {
-        makeRequestAllPosts( {commit} ){
-            return axios.get("https:/jsonplaceholder.typicode.com/posts")
-            .then(response => {this.subscribeAction
-                response.data.length === 0 ? commit('errorOcurred') : commit('errorNotOcurred') ;
+        makeRequestAllPosts( {state, commit} ){
+            return axios.get(`${state.objWithUrlStrings.mainUrl}${state.objWithUrlStrings.postsUrl}`)
+            .then(response => {
+                response.data.length === 0 ? commit('errorOcurred') : commit('errorNotOcurred')
                 commit('changePosts', response.data);
             })
-            .catch(() =>  { 
-              commit('errorOcurred');  
-              return new Promise ((resolve, reject)=> reject() )})
+            .catch(()=>{ commit('errorOcurred'); return reject;});
         },
 
-        makeRequestCurrentPost(context, postId){
-           return axios.get(`https:/jsonplaceholder.typicode.com/posts/${postId}`)
+        makeRequestCurrentPost({commit, dispatch, state}, postId){
+           return axios.get(`${state.objWithUrlStrings.mainUrl}${state.objWithUrlStrings.postsUrl}${postId}`)
             .then(response => { 
-              context.commit('changeCurrentPost',response.data);
-              context.dispatch('makeRequestUser');
+              commit('changeCurrentPost',response.data);
+              dispatch('makeRequestUser');
               })
             .catch(()=> {
-              context.commit('currentPostRequestErrorOcurred');
-              return new Promise((resolve, reject)=>reject())
+              commit('currentPostRequestErrorOcurred');
+              return reject()
             });
         },
 
-        makeRequestUser(context){
-            axios.get(`https:/jsonplaceholder.typicode.com/users/${context.state.currentPost['userId']}`)
+        makeRequestUser({commit, state}){
+            axios.get(`${state.objWithUrlStrings.mainUrl}${state.objWithUrlStrings.userUrl}${state.currentPost['userId']}`)
             .then( response =>{ 
-                context.commit('changeCurrentPostUser', response.data) 
+                commit('changeCurrentPostUser', response.data) 
             })
             .catch(()=> {
-                context.commit('currentPostRequestErrorOcurred')});
+                commit('currentPostRequestErrorOcurred')});
         },
 
-        makeRequestPostComments(context, postId){
-            return axios.get(`https:/jsonplaceholder.typicode.com/comments?postId=${postId}`)
+        makeRequestPostComments({commit, state}, postId){
+             return axios.get(`${state.objWithUrlStrings.mainUrl}${state.objWithUrlStrings.commentsUrl}${postId}`)
             .then(response => { 
-              context.commit('changeCurrentPostComments',response.data);
+              commit('changeCurrentPostComments',response.data);
             })
             .catch(()=> {
-              context.commit('currentPostRequestErrorOcurred');
-              return new Promise((resolve, reject)=> reject())
+              commit('currentPostRequestErrorOcurred');
+              return reject();
             })
         },
     }

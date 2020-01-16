@@ -19,7 +19,7 @@
 import RenderPost from "./RenderPost"
 import postPagination from "./postPagination"
 import RenderButtons from "./RenderButtons"
-
+/*eslint-disable*/
 export default {
   components:{
     RenderPost,
@@ -132,6 +132,7 @@ export default {
     }
   }
 }
+
 </script>
 
 <style>
