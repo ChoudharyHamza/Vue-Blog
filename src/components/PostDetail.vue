@@ -1,82 +1,62 @@
 <template>
     <div>
         <div>
-            <router-Link :to="{ name: 'RenderBlogWithPage', params: {activePage} }" ><button>Go back</button></router-link>
-            
-            <div v-if = "checkIds">
-            <h1> {{currentPost.id}}-  {{ currentPost.title }} </h1>
-            <p> {{currentPost.body}} </p>
+            <router-Link :to="{ name: 'RenderBlogWithPage', params: {activePage} }" >
+                <button>Go back</button>
+            </router-link>
+        </div>
+        <div v-if = "checkIds">
+            <div>
+                <h1> {{$store.state.currentPost.id}}-  {{ $store.state.currentPost.title }} </h1>
+                <p> {{$store.state.currentPost.body}} </p>
             </div>
-            <h1 v-else > Loading... </h1>
+            <div class="author-div" > 
+                <h2> Author: </h2>
+                <h3 class= "same-line" > {{$store.state.currentPostUser.name}} </h3>
+                <h5 class= "same-line" >{{$store.state.currentPostUser.email}} </h5>    
+            </div>
+            <div class="comment-div" >
+                <h2> Comments </h2>
+                <div v-for="(comment, index) in $store.state.currentPostComments" :key="index"> 
+                    <hr>
+                    <h3 > Email:-  {{comment.email}} </h3> <h5> Body:- {{ comment.body }} </h5>
+                </div>
+            </div>
         </div>
-        <div class="author-div" > 
-            <h2> Author: </h2>
-            <h3 class= "same-line" > {{user.name}} </h3> <h5 class= "same-line" >{{user.email}} </h5>    
-        </div>
-        <div class="comment-div" >
-            <h2> Comments </h2>
-        <div v-for="(comment, index) in comments" :key="index"> <hr> <h3 > Email:-  {{comment.email}} </h3> <h5> Body:- {{ comment.body }} </h5> </div>
-        </div>
+        <div v-else-if = "checkError"> <h1>Boom!  errorr tis an errorr </h1></div>
+        <h1 v-else > Loading... </h1>
 
     </div>
 </template>
 
 <script>
-/*eslint-disable*/
-import axios from "axios"
-
 export default {
     name: "PostDetail",
     props: ["postId", "activePage"],
     data(){
         return {
-            currentPost: {},
             errorOcurred: false,
-            user:{},
-            comments:{},
         }
     }, 
     
     mounted(){
-        this.makeRequest();
-        this.makeRequestComments();
+        this.$store.dispatch('makeRequestPostComments',this.postId)
+        .catch(() =>{ this.errorOcurred = this.$store.state.currentPostRequestError } );
+        this.$store.dispatch('makeRequestCurrentPost',this.postId)
+        .catch(() =>{ this.errorOcurred = this.$store.state.currentPostRequestError } );
     },
 
-    methods: {
-        makeRequest(){
-            axios.get(`https:/jsonplaceholder.typicode.com/posts/${this.postId}`)
-            .then(response => { 
-                this.currentPost = response.data;
-                this.makeRequestUser();
-                })
-            .catch(()=>{this.errorOcurred = true})    
-        },
-        makeRequestUser(){
-            axios.get(`https:/jsonplaceholder.typicode.com/users/${this.currentPost.userId}`)
-            .then( response =>{ this.user = response.data })
-            .catch( ()  => { console.log("thies ais an errror") });
-        },
-        makeRequestComments(){
-            axios.get(`https:/jsonplaceholder.typicode.com/comments?postId=${this.postId}`)
-            .then(response => { this.comments = response.data;console.log(this.comments) })
-            .catch(() => {console.log("thus an error occured")})
-        }
-    },
-    
     computed: {
         checkIds(){
-          return this.postId==this.currentPost.id;
+          return this.postId==this.$store.state.currentPost.id;
         },
-    },
-
-    watch:{
-        errorOcurred: function(){
-        alert("boom!  errorr tis an errorr");
+        checkError(){
+            return this.errorOcurred;
         }
-    }
+    },
 }
-/*eslint-disable*/
 </script>
+
 <style scoped>
 .author-div{
     margin-top:40px;
